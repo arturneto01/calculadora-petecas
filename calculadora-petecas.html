@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Taxas da Maquininha</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --primary: #2563eb;
+      --primary-strong: #1d4ed8;
+      --success: #16a34a;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 28%),
+        linear-gradient(180deg, #08101c 0%, #0d1728 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .developer-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 12px 16px;
+      background: rgba(8, 16, 28, 0.92);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .developer-header-inner {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .developer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .developer-brand strong {
+      display: block;
+      color: #ffffff;
+      font-size: 1rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .developer-brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .developer-contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+      font-size: 0.82rem;
+      line-height: 1.2;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .developer-contact:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .app {
+      margin-top: 88px;
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 2.2rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      text-align: center;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+
+    .form {
+      display: grid;
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .currency {
+      position: absolute;
+      top: 50%;
+      left: 16px;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-weight: 700;
+      pointer-events: none;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      min-height: 56px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input,
+    select {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+    }
+
+    input {
+      padding: 0 16px 0 52px;
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+    }
+
+    select {
+      padding: 0 16px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, #cbd5e1 50%), linear-gradient(135deg, #cbd5e1 50%, transparent 50%);
+      background-position: calc(100% - 22px) calc(50% - 4px), calc(100% - 16px) calc(50% - 4px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+    }
+
+    select option {
+      background: #ffffff;
+      color: #0f172a;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus {
+      border-color: rgba(37, 99, 235, 0.8);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.28);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+      color: var(--text);
+    }
+
+    .secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .result {
+      margin-top: 24px;
+      display: none;
+      gap: 12px;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .result-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+    }
+
+    .result-card strong {
+      font-size: 1.1rem;
+      line-height: 1.3;
+    }
+
+    .result-card.total {
+      background: rgba(22, 163, 74, 0.16);
+      border-color: rgba(22, 163, 74, 0.22);
+    }
+
+    .result-card.total strong {
+      color: #dcfce7;
+      font-size: 1.35rem;
+    }
+
+    .obs {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .feedback-box {
+      margin-top: 4px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      text-align: left;
+    }
+
+    .feedback-box strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      color: #ffffff;
+    }
+
+    .feedback-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .feedback-box.sucesso {
+      background: rgba(22, 163, 74, 0.14);
+      border-color: rgba(22, 163, 74, 0.26);
+    }
+
+    .feedback-box.aviso {
+      background: rgba(245, 158, 11, 0.10);
+      border-color: rgba(245, 158, 11, 0.24);
+    }
+
+    .footer {
+      align-self: stretch;
+      width: calc(100% + 32px);
+      margin-left: -16px;
+      margin-right: -16px;
+      margin-top: 24px;
+      margin-bottom: -16px;
+      padding: 12px 16px;
+      background: rgba(8, 16, 28, 0.92);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    .footer a {
+      color: #e2e8f0;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: none;
+    }
+
+    .pix-box {
+      margin-top: 16px;
+      display: none;
+      gap: 12px;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .pix-box h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .pix-box p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .pix-qr {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 14px;
+      border-radius: 16px;
+      background: #ffffff;
+      min-height: 220px;
+    }
+
+    .pix-qr canvas,
+    .pix-qr img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .pix-receiver {
+      display: grid;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .pix-receiver span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.4;
+    }
+
+    .pix-receiver strong {
+      color: var(--text);
+      font-size: 0.96rem;
+      line-height: 1.5;
+    }
+
+    .pix-actions {
+      display: grid;
+      gap: 12px;
+    }
+
+    .whatsapp-box {
+      display: none;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .whatsapp-box strong {
+      color: var(--text);
+      font-size: 0.96rem;
+      line-height: 1.5;
+    }
+
+    .whatsapp-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 1200;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      width: min(100%, 520px);
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      padding: 20px;
+      max-height: min(92vh, 760px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .modal-header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .close-btn {
+      width: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 12px;
+      box-shadow: none;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0;
+      font-size: 1.2rem;
+    }
+
+    .modal-grid {
+      display: grid;
+      gap: 14px;
+      overflow-y: auto;
+      min-height: 0;
+      padding-right: 4px;
+    }
+
+    .produto-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .produto-lista {
+      max-height: 220px;
+      overflow: auto;
+      display: grid;
+      gap: 10px;
+      padding-right: 4px;
+      min-height: 72px;
+    }
+
+    .produto-vazio,
+    .produto-item {
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 14px;
+    }
+
+    .produto-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .produto-item small,
+    .produto-vazio {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .produto-item strong {
+      display: block;
+      font-size: 1rem;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+
+    .remove-btn {
+      width: auto;
+      min-width: 88px;
+      min-height: 40px;
+      padding: 0 12px;
+      border-radius: 12px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #fecaca;
+      box-shadow: none;
+      font-size: 0.9rem;
+    }
+
+    .modal-total {
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(22, 163, 74, 0.14);
+      border: 1px solid rgba(22, 163, 74, 0.22);
+    }
+
+    .modal-total span {
+      display: block;
+      color: #dcfce7;
+      font-size: 0.88rem;
+      margin-bottom: 6px;
+    }
+
+    .modal-total strong {
+      font-size: 1.5rem;
+      color: #ffffff;
+    }
+
+    .modal-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .developer-header {
+        padding: calc(16px + env(safe-area-inset-top, 0px)) 14px 14px;
+      }
+
+      .developer-header-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .developer-brand strong {
+        font-size: 0.94rem;
+      }
+
+      .developer-brand span {
+        font-size: 0.76rem;
+      }
+
+      .developer-contact {
+        justify-content: center;
+        font-size: 0.78rem;
+        padding: 10px 12px;
+      }
+
+      .app {
+        margin-top: 116px;
+      }
+
+      .app,
+      .modal {
+        padding: 18px;
+        border-radius: 20px;
+      }
+
+      .modal-overlay {
+        align-items: flex-start;
+        padding: 12px;
+      }
+
+      .modal {
+        width: 100%;
+        max-height: calc(100dvh - 24px);
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .subtitle {
+        font-size: 0.92rem;
+      }
+
+      .produto-actions,
+      .modal-footer {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-header {
+        align-items: flex-start;
+      }
+
+      .modal-header h2 {
+        font-size: 1.05rem;
+      }
+
+      .modal-header p,
+      .produto-item small,
+      .produto-vazio {
+        font-size: 0.84rem;
+      }
+
+      .produto-lista {
+        max-height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="developer-header">
+    <div class="developer-header-inner">
+      <div class="developer-brand">
+        <strong>Artur Neto</strong>
+        <span>Desenvolvimento de sistemas para comércios</span>
+      </div>
+      <a class="developer-contact" href="https://wa.me/558688073377" target="_blank" rel="noopener noreferrer">Suporte e contato: (86) 8807-3377</a>
+    </div>
+  </header>
+
+  <main class="app">
+    <h1>Calculadora de Cobrança</h1>
+    <p class="subtitle">Informe quanto você quer receber e escolha a forma de pagamento.</p>
+
+    <section class="form">
+      <div class="field">
+        <label for="valor">Quanto você quer receber</label>
+        <div class="input-wrap">
+          <span class="currency">R$</span>
+          <input type="text" id="valor" inputmode="numeric" autocomplete="off" placeholder="R$ 0,00" />
+        </div>
+      </div>
+
+      <button type="button" class="secondary-btn" id="abrirCalculadoraBtn">Somar produtos</button>
+
+      <div class="field">
+        <label for="tipo">Forma de pagamento</label>
+        <select id="tipo">
+          <option value="" selected>Selecione uma opção</option>
+          <option value="pix">PIX - 0%</option>
+          <option value="debito">Débito - 0,74%</option>
+          <option value="credito_avista">Crédito à vista - 0,74%</option>
+          <option value="credito_2x">Crédito em até 2x - 3,99%</option>
+          <option value="credito_3x">Crédito em até 3x - 4,99%</option>
+        </select>
+      </div>
+
+      <div class="feedback-box aviso" id="parcelamentoInfo">
+        <strong>Informação sobre parcelamento</strong>
+        <p>Digite o valor desejado para o sistema informar se o parcelamento está disponível.</p>
+      </div>
+
+      <button type="button" id="calcularBtn">Calcular</button>
+    </section>
+
+    <section class="result" id="resultado">
+      <div class="result-card">
+        <span>Valor da taxa</span>
+        <strong id="resTaxa">R$ 0,00</strong>
+      </div>
+
+      <div class="result-card total">
+        <span>Valor que deve cobrar</span>
+        <strong id="resCobrar">R$ 0,00</strong>
+      </div>
+    </section>
+
+    <section class="pix-box" id="pixBox">
+      <div>
+        <h2>Pague com Pix</h2>
+        <p>Aponte a câmera do seu celular para o QR Code abaixo e faça o pagamento.</p>
+      </div>
+
+      <div class="pix-qr" id="pixQrWrap">
+        <canvas id="pixQrCode"></canvas>
+      </div>
+
+      <div class="pix-receiver">
+        <span>Recebimento</span>
+        <strong>Josifran de Sousa Lima</strong>
+        <span>Banco</span>
+        <strong>Mercado Pago</strong>
+      </div>
+
+      <div class="pix-actions">
+        <button type="button" class="secondary-btn" id="enviarCodigoPixBtn">Enviar código Pix por WhatsApp</button>
+        <button type="button" class="secondary-btn" id="solicitarComprovanteBtn">Solicitar comprovante Pix</button>
+      </div>
+
+      <div class="whatsapp-box" id="whatsappBox">
+        <strong id="whatsappTitulo">Enviar por WhatsApp</strong>
+        <p id="whatsappDescricao">Digite o número com DDD para continuar.</p>
+        <div class="field">
+          <label for="whatsappNumero">Número do WhatsApp</label>
+          <input type="tel" id="whatsappNumero" inputmode="numeric" autocomplete="off" placeholder="Digite o número com DDD" />
+        </div>
+        <button type="button" id="confirmarWhatsappBtn">Continuar no WhatsApp</button>
+      </div>
+    </section>
+
+    <p class="obs" id="mensagemCalculo">O cálculo mostra quanto precisa ser cobrado para sobrar exatamente o valor desejado após a taxa.</p>
+
+    </main>
+
+  <footer class="footer">
+      <div>© <span id="anoAtual"></span> Desenvolvido por Artur Neto WhatsApp: <a href="https://wa.me/558688073377" target="_blank" rel="noopener noreferrer">(86) 8807-3377</a></div>
+    </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+  <div class="modal-overlay" id="calculadoraModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="calculadoraTitulo">
+      <div class="modal-header">
+        <div>
+          <h2 id="calculadoraTitulo">Calculadora de produtos</h2>
+          <p>Some os valores dos produtos e envie o total para o cálculo da maquininha.</p>
+        </div>
+        <button type="button" class="close-btn" id="fecharModalBtn" aria-label="Fechar modal">×</button>
+      </div>
+
+      <div class="modal-grid">
+        <div class="field">
+          <label for="valorProduto">Valor do produto</label>
+          <input type="text" id="valorProduto" inputmode="numeric" autocomplete="off" placeholder="R$ 0,00" />
+        </div>
+
+        <div class="produto-actions">
+          <button type="button" id="adicionarProdutoBtn">Adicionar produto</button>
+          <button type="button" class="secondary-btn" id="limparProdutosBtn">Limpar lista</button>
+        </div>
+
+        <div class="produto-lista" id="listaProdutos">
+          <div class="produto-vazio">Nenhum produto adicionado ainda.</div>
+        </div>
+
+        <div class="modal-total">
+          <span>Total dos produtos</span>
+          <strong id="totalProdutos">R$ 0,00</strong>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="secondary-btn" id="cancelarModalBtn">Fechar</button>
+          <button type="button" id="usarTotalBtn">Usar total no cálculo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const formas = {
+      pix: { nome: 'PIX', taxa: 0 },
+      debito: { nome: 'Débito', taxa: 0.74 },
+      credito_avista: { nome: 'Crédito à vista', taxa: 0.74 },
+      credito_2x: { nome: 'Crédito em até 2x', taxa: 3.99 },
+      credito_3x: { nome: 'Crédito em até 3x', taxa: 4.99 }
+    };
+
+    const valorInput = document.getElementById('valor');
+    const tipoSelect = document.getElementById('tipo');
+    const calcularBtn = document.getElementById('calcularBtn');
+    const resultado = document.getElementById('resultado');
+    const parcelamentoInfo = document.getElementById('parcelamentoInfo');
+    const anoAtual = document.getElementById('anoAtual');
+    const mensagemCalculo = document.getElementById('mensagemCalculo');
+    const pixBox = document.getElementById('pixBox');
+    const pixQrCode = document.getElementById('pixQrCode');
+    const enviarCodigoPixBtn = document.getElementById('enviarCodigoPixBtn');
+    const solicitarComprovanteBtn = document.getElementById('solicitarComprovanteBtn');
+    const whatsappBox = document.getElementById('whatsappBox');
+    const whatsappTitulo = document.getElementById('whatsappTitulo');
+    const whatsappDescricao = document.getElementById('whatsappDescricao');
+    const whatsappNumero = document.getElementById('whatsappNumero');
+    const confirmarWhatsappBtn = document.getElementById('confirmarWhatsappBtn');
+    
+
+    const abrirCalculadoraBtn = document.getElementById('abrirCalculadoraBtn');
+    const calculadoraModal = document.getElementById('calculadoraModal');
+    const fecharModalBtn = document.getElementById('fecharModalBtn');
+    const cancelarModalBtn = document.getElementById('cancelarModalBtn');
+    const valorProdutoInput = document.getElementById('valorProduto');
+    const adicionarProdutoBtn = document.getElementById('adicionarProdutoBtn');
+    const limparProdutosBtn = document.getElementById('limparProdutosBtn');
+    const listaProdutos = document.getElementById('listaProdutos');
+    const totalProdutos = document.getElementById('totalProdutos');
+    const usarTotalBtn = document.getElementById('usarTotalBtn');
+
+    let produtos = [];
+    let codigoPixAtual = '';
+    let acaoWhatsappAtual = 'codigo';
+    let ultimoWhatsappInformado = localStorage.getItem('ultimoWhatsappInformado') || '';
+
+    function formatarMoeda(valor) {
+      return valor.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+    }
+
+    function extrairValorMoeda(texto) {
+      const numeros = String(texto).replace(/\D/g, '');
+      return numeros ? Number(numeros) / 100 : 0;
+    }
+
+    function aplicarMascaraMoeda(input) {
+      const valor = extrairValorMoeda(input.value);
+      input.value = valor ? formatarMoeda(valor) : '';
+    }
+
+    function formatarCampoPix(id, valor) {
+      return id + String(valor.length).padStart(2, '0') + valor;
+    }
+
+    function limparTextoPix(texto, limite) {
+      return String(texto)
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^A-Za-z0-9 \-]/g, '')
+        .trim()
+        .toUpperCase()
+        .slice(0, limite);
+    }
+
+    function calcularCRC16(payload) {
+      let crc = 0xFFFF;
+
+      for (let i = 0; i < payload.length; i += 1) {
+        crc ^= payload.charCodeAt(i) << 8;
+
+        for (let j = 0; j < 8; j += 1) {
+          if ((crc & 0x8000) !== 0) {
+            crc = (crc << 1) ^ 0x1021;
+          } else {
+            crc <<= 1;
+          }
+
+          crc &= 0xFFFF;
+        }
+      }
+
+      return crc.toString(16).toUpperCase().padStart(4, '0');
+    }
+
+    function gerarPixCopiaECola(valor) {
+      const chavePix = 'bc58660a-46cd-42cc-a293-45e2bca3151d';
+      const nomeRecebedor = limparTextoPix('JOSIFRAN DE SOUSA LIMA', 25);
+      const cidadeRecebedor = limparTextoPix('TERESINA', 15);
+      const txid = '***';
+      const valorFormatado = valor.toFixed(2);
+
+      const contaPix =
+        formatarCampoPix('00', 'BR.GOV.BCB.PIX') +
+        formatarCampoPix('01', chavePix);
+
+      const adicionais = formatarCampoPix('05', txid);
+
+      const payloadSemCRC =
+        formatarCampoPix('00', '01') +
+        formatarCampoPix('01', '12') +
+        formatarCampoPix('26', contaPix) +
+        formatarCampoPix('52', '0000') +
+        formatarCampoPix('53', '986') +
+        formatarCampoPix('54', valorFormatado) +
+        formatarCampoPix('58', 'BR') +
+        formatarCampoPix('59', nomeRecebedor) +
+        formatarCampoPix('60', cidadeRecebedor) +
+        formatarCampoPix('62', adicionais) +
+        '6304';
+
+      return payloadSemCRC + calcularCRC16(payloadSemCRC);
+    }
+
+    function esconderPix() {
+      pixBox.style.display = 'none';
+      whatsappBox.style.display = 'none';
+      whatsappNumero.value = ultimoWhatsappInformado;
+      codigoPixAtual = '';
+      const contexto = pixQrCode.getContext('2d');
+      contexto.clearRect(0, 0, pixQrCode.width, pixQrCode.height);
+    }
+
+    function mostrarPix(valor) {
+      const codigoPix = gerarPixCopiaECola(valor);
+      codigoPixAtual = codigoPix;
+      pixBox.style.display = 'grid';
+      whatsappBox.style.display = 'none';
+      whatsappNumero.value = ultimoWhatsappInformado;
+
+      if (window.QRCode && typeof window.QRCode.toCanvas === 'function') {
+        window.QRCode.toCanvas(pixQrCode, codigoPix, {
+          width: 220,
+          margin: 1
+        });
+      }
+    }
+
+    function normalizarNumeroWhatsapp(numero) {
+      let digitos = String(numero).replace(/\D/g, '');
+
+      if (digitos.startsWith('55') && digitos.length > 11) {
+        digitos = digitos.slice(2);
+      }
+
+      if (digitos.length < 10) {
+        return '';
+      }
+
+      const ddd = Number(digitos.slice(0, 2));
+      let numeroLocal = digitos.slice(2);
+
+      if (ddd < 30 && numeroLocal.length === 8) {
+        numeroLocal = '9' + numeroLocal;
+      }
+
+      if (ddd > 30 && numeroLocal.length === 9 && numeroLocal.startsWith('9')) {
+        numeroLocal = numeroLocal.slice(1);
+      }
+
+      if (numeroLocal.length < 8 || numeroLocal.length > 9) {
+        return '';
+      }
+
+      return '55' + String(ddd).padStart(2, '0') + numeroLocal;
+    }
+
+    function abrirAcaoWhatsapp(tipo) {
+      if (!codigoPixAtual) {
+        alert('Calcule o Pix antes de enviar pelo WhatsApp.');
+        return;
+      }
+
+      if (whatsappNumero.value.trim()) {
+        ultimoWhatsappInformado = whatsappNumero.value;
+        localStorage.setItem('ultimoWhatsappInformado', ultimoWhatsappInformado);
+      }
+
+      acaoWhatsappAtual = tipo;
+      whatsappBox.style.display = 'grid';
+      whatsappNumero.value = ultimoWhatsappInformado;
+
+      if (tipo === 'codigo') {
+        whatsappTitulo.textContent = 'Enviar código Pix por WhatsApp';
+        whatsappDescricao.textContent = 'Digite o número com DDD para enviar somente o código Pix.';
+        confirmarWhatsappBtn.textContent = 'Enviar código Pix';
+      } else {
+        whatsappTitulo.textContent = 'Solicitar comprovante Pix';
+        whatsappDescricao.textContent = 'Digite o número com DDD para solicitar o comprovante do pagamento.';
+        confirmarWhatsappBtn.textContent = 'Solicitar comprovante';
+      }
+
+      whatsappNumero.focus();
+    }
+
+    function enviarWhatsapp() {
+      const numeroFormatado = normalizarNumeroWhatsapp(whatsappNumero.value);
+      ultimoWhatsappInformado = whatsappNumero.value;
+      localStorage.setItem('ultimoWhatsappInformado', ultimoWhatsappInformado);
+
+      if (!numeroFormatado) {
+        alert('Digite um número de WhatsApp válido com DDD.');
+        whatsappNumero.focus();
+        return;
+      }
+
+      const mensagem = acaoWhatsappAtual === 'codigo'
+        ? codigoPixAtual
+        : `Olá! Por favor, envie o comprovante do Pix desta compra realizada no dia ${new Date().toLocaleDateString('pt-BR')}, no período da ${(() => {
+            const hora = new Date().getHours();
+            if (hora >= 0 && hora < 6) return 'madrugada';
+            if (hora >= 6 && hora < 12) return 'manhã';
+            if (hora >= 12 && hora < 18) return 'tarde';
+            return 'noite';
+          })()}.
+
+Estabelecimento: Os Petecas
+Recebedor: Josifran de Sousa Lima
+Valor: ${document.getElementById('resCobrar').textContent}`;
+
+      window.open(`https://wa.me/${numeroFormatado}?text=${encodeURIComponent(mensagem)}`, '_blank');
+    }
+
+    function atualizarParcelamento() {
+      const valor = extrairValorMoeda(valorInput.value);
+      const opcao2x = tipoSelect.querySelector("option[value='credito_2x']");
+      const opcao3x = tipoSelect.querySelector("option[value='credito_3x']");
+
+      const libera2x = valor >= 50;
+      const libera3x = valor >= 100;
+
+      opcao2x.disabled = !libera2x;
+      opcao3x.disabled = !libera3x;
+
+      opcao2x.textContent = libera2x
+        ? 'Crédito em até 2x - 3,99%'
+        : 'Crédito em até 2x - indisponível';
+
+      opcao3x.textContent = libera3x
+        ? 'Crédito em até 3x - 4,99%'
+        : 'Crédito em até 3x - indisponível';
+
+      if (tipoSelect.value === 'credito_2x' && !libera2x) {
+        tipoSelect.value = '';
+      }
+
+      if (tipoSelect.value === 'credito_3x' && !libera3x) {
+        tipoSelect.value = '';
+      }
+
+      if (!valor) {
+        parcelamentoInfo.className = 'feedback-box aviso';
+        parcelamentoInfo.innerHTML = '<strong>Informação sobre parcelamento</strong><p>Digite o valor desejado para o sistema informar se o parcelamento está disponível.</p>';
+      } else if (valor < 50) {
+        parcelamentoInfo.className = 'feedback-box aviso';
+        parcelamentoInfo.innerHTML = '<strong>Parcelamento indisponível</strong><p>Para este valor, a venda só pode ser feita em PIX, débito ou crédito à vista. O parcelamento em 2x só é liberado a partir de R$ 50,00.</p>';
+      } else if (valor < 100) {
+        parcelamentoInfo.className = 'feedback-box sucesso';
+        parcelamentoInfo.innerHTML = '<strong>Parcelamento em 2x disponível</strong><p>Para este valor, você já pode vender parcelado em até 2 vezes. O parcelamento em 3x ainda não está disponível, pois ele só é liberado a partir de R$ 100,00.</p>';
+      } else {
+        parcelamentoInfo.className = 'feedback-box sucesso';
+        parcelamentoInfo.innerHTML = '<strong>Parcelamento em 2x e 3x disponível</strong><p>Para este valor, a venda pode ser feita em até 2 vezes ou em até 3 vezes, além das opções PIX, débito e crédito à vista.</p>';
+      }
+    }
+
+    function calcular() {
+      const valorDesejado = extrairValorMoeda(valorInput.value);
+      const tipo = tipoSelect.value;
+
+      atualizarParcelamento();
+
+      if (!valorDesejado || valorDesejado <= 0) {
+        alert('Digite um valor válido maior que zero.');
+        valorInput.focus();
+        return;
+      }
+
+      if (!tipo) {
+        alert('Selecione uma forma de pagamento.');
+        tipoSelect.focus();
+        return;
+      }
+
+      const forma = formas[tipo];
+      const percentual = forma.taxa / 100;
+      const valorCobrarBruto = valorDesejado / (1 - percentual);
+      const valorCobrar = Math.ceil(valorCobrarBruto * 100) / 100;
+      const valorTaxa = valorCobrar - valorDesejado;
+
+      document.getElementById('resTaxa').textContent = formatarMoeda(valorTaxa);
+      document.getElementById('resCobrar').textContent = formatarMoeda(valorCobrar);
+      resultado.style.display = 'grid';
+
+      if (tipo === 'pix') {
+        mostrarPix(valorCobrar);
+        mensagemCalculo.style.display = 'none';
+      } else {
+        esconderPix();
+        mensagemCalculo.style.display = 'block';
+      }
+    }
+
+    function abrirModal() {
+      calculadoraModal.classList.add('active');
+      valorProdutoInput.focus();
+    }
+
+    function fecharModal() {
+      calculadoraModal.classList.remove('active');
+    }
+
+    function atualizarListaProdutos() {
+      if (!produtos.length) {
+        listaProdutos.innerHTML = '<div class="produto-vazio">Nenhum produto adicionado ainda.</div>';
+        totalProdutos.textContent = 'R$ 0,00';
+        return;
+      }
+
+      const total = produtos.reduce((soma, item) => soma + item, 0);
+      totalProdutos.textContent = formatarMoeda(total);
+
+      listaProdutos.innerHTML = produtos
+        .map((item, index) => `
+          <div class="produto-item">
+            <div>
+              <small>Produto ${index + 1}</small>
+              <strong>${formatarMoeda(item)}</strong>
+            </div>
+            <button type="button" class="remove-btn" onclick="removerProduto(${index})">Remover</button>
+          </div>
+        `)
+        .join('');
+    }
+
+    function adicionarProduto() {
+      const valorProduto = extrairValorMoeda(valorProdutoInput.value);
+
+      if (!valorProduto || valorProduto <= 0) {
+        alert('Digite um valor válido para o produto.');
+        valorProdutoInput.focus();
+        return;
+      }
+
+      produtos.push(valorProduto);
+      valorProdutoInput.value = '';
+      atualizarListaProdutos();
+      valorProdutoInput.focus();
+    }
+
+    function removerProduto(index) {
+      produtos.splice(index, 1);
+      atualizarListaProdutos();
+    }
+
+    function limparProdutos() {
+      produtos = [];
+      valorProdutoInput.value = '';
+      atualizarListaProdutos();
+      valorProdutoInput.focus();
+    }
+
+    function usarTotalNoCalculo() {
+      const total = produtos.reduce((soma, item) => soma + item, 0);
+
+      if (!total) {
+        alert('Adicione pelo menos um produto para usar o total no cálculo.');
+        valorProdutoInput.focus();
+        return;
+      }
+
+      valorInput.value = formatarMoeda(total);
+      atualizarParcelamento();
+      fecharModal();
+      tipoSelect.focus();
+    }
+
+    valorInput.addEventListener('input', () => {
+      aplicarMascaraMoeda(valorInput);
+      atualizarParcelamento();
+    });
+
+    valorProdutoInput.addEventListener('input', () => {
+      aplicarMascaraMoeda(valorProdutoInput);
+    });
+
+    valorProdutoInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        adicionarProduto();
+      }
+    });
+
+    abrirCalculadoraBtn.addEventListener('click', abrirModal);
+    fecharModalBtn.addEventListener('click', fecharModal);
+    cancelarModalBtn.addEventListener('click', fecharModal);
+    adicionarProdutoBtn.addEventListener('click', adicionarProduto);
+    limparProdutosBtn.addEventListener('click', limparProdutos);
+    usarTotalBtn.addEventListener('click', usarTotalNoCalculo);
+
+    calculadoraModal.addEventListener('click', (event) => {
+      if (event.target === calculadoraModal) {
+        fecharModal();
+      }
+    });
+
+    tipoSelect.addEventListener('change', () => {
+      atualizarParcelamento();
+      if (tipoSelect.value !== 'pix') {
+        esconderPix();
+        mensagemCalculo.style.display = 'block';
+      }
+    });
+    calcularBtn.addEventListener('click', calcular);
+    enviarCodigoPixBtn.addEventListener('click', () => abrirAcaoWhatsapp('codigo'));
+    solicitarComprovanteBtn.addEventListener('click', () => abrirAcaoWhatsapp('comprovante'));
+    confirmarWhatsappBtn.addEventListener('click', enviarWhatsapp);
+    whatsappNumero.addEventListener('input', () => {
+      ultimoWhatsappInformado = whatsappNumero.value;
+      localStorage.setItem('ultimoWhatsappInformado', ultimoWhatsappInformado);
+    });
+    whatsappNumero.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        enviarWhatsapp();
+      }
+    });
+
+    anoAtual.textContent = new Date().getFullYear();
+    localStorage.removeItem('ultimoWhatsappInformado');
+    ultimoWhatsappInformado = '';
+    valorInput.value = '';
+    tipoSelect.value = '';
+    valorProdutoInput.value = '';
+    whatsappNumero.value = '';
+    resultado.style.display = 'none';
+    mensagemCalculo.style.display = 'block';
+    calculadoraModal.classList.remove('active');
+    produtos = [];
+    atualizarListaProdutos();
+    esconderPix();
+    atualizarParcelamento();
+
+    window.removerProduto = removerProduto;
+  </script>
+</body>
+</html>
