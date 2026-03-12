@@ -44,7 +44,7 @@
       left: 0;
       width: 100%;
       z-index: 1000;
-      padding: 12px 16px;
+      padding: 5px 16px;
       background: rgba(8, 16, 28, 0.92);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -67,6 +67,26 @@
       gap: 2px;
     }
 
+    .developer-brand-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .developer-brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .developer-logo {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      flex-shrink: 0;
+      display: block;
+    }
+
     .developer-brand strong {
       display: block;
       color: #ffffff;
@@ -86,7 +106,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 14px;
+      padding: 8px 14px;
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.10);
       background: rgba(255, 255, 255, 0.04);
@@ -143,6 +163,10 @@
       margin-bottom: 10px;
     }
 
+    .field label span {
+      color: #fca5a5;
+    }
+
     .input-wrap {
       position: relative;
     }
@@ -177,6 +201,11 @@
 
     input {
       padding: 0 16px 0 52px;
+    }
+
+    #whatsappNome,
+    #whatsappNumero {
+      padding: 0 16px;
     }
 
     input::placeholder {
@@ -570,13 +599,13 @@
 
     @media (max-width: 520px) {
       .developer-header {
-        padding: calc(16px + env(safe-area-inset-top, 0px)) 14px 14px;
+        padding: calc(7px + env(safe-area-inset-top, 0px)) 14px 7px;
       }
 
       .developer-header-inner {
         flex-direction: column;
         align-items: stretch;
-        gap: 12px;
+        gap: 10px;
       }
 
       .developer-brand strong {
@@ -590,11 +619,20 @@
       .developer-contact {
         justify-content: center;
         font-size: 0.78rem;
-        padding: 10px 12px;
+        padding: 8px 12px;
+      }
+
+      .developer-brand-top {
+        justify-content: center;
+      }
+
+      .developer-logo {
+        width: 42px;
+        height: 42px;
       }
 
       .app {
-        margin-top: 116px;
+        margin-top: 110px;
       }
 
       .app,
@@ -651,10 +689,15 @@
   <header class="developer-header">
     <div class="developer-header-inner">
       <div class="developer-brand">
-        <strong>Artur Neto</strong>
-        <span>Desenvolvimento de sistemas para comércios</span>
+        <div class="developer-brand-top">
+          <img class="developer-logo" src="https://api-minio.chinaragomes.com/imagens/S%C3%ADmbolo%20-%20Artur%20Neto%20%20-%20png.png" alt="Logo Artur Neto" />
+          <div class="developer-brand-text">
+            <strong>Artur Neto</strong>
+            <span>Desenvolvimento de sistemas para comércios</span>
+          </div>
+        </div>
       </div>
-      <a class="developer-contact" href="https://wa.me/558688073377" target="_blank" rel="noopener noreferrer">Suporte e contato: (86) 8807-3377</a>
+      <a class="developer-contact" href="https://wa.me/558688073377" target="_blank" rel="noopener noreferrer">Suporte e contato: (86) 9.8807-3377</a>
     </div>
   </header>
 
@@ -723,16 +766,21 @@
       </div>
 
       <div class="pix-actions">
-        <button type="button" class="secondary-btn" id="enviarCodigoPixBtn">Enviar código Pix por WhatsApp</button>
-        <button type="button" class="secondary-btn" id="solicitarComprovanteBtn">Solicitar comprovante Pix</button>
+        <button type="button" class="secondary-btn" id="solicitarComprovanteBtn">Enviar informações</button>
+        <button type="button" class="secondary-btn" id="enviarCodigoPixBtn">Enviar código Pix</button>
+        <button type="button" class="secondary-btn" id="solicitarComprovanteClienteBtn">Solicitar Comprovante</button>
       </div>
 
       <div class="whatsapp-box" id="whatsappBox">
         <strong id="whatsappTitulo">Enviar por WhatsApp</strong>
         <p id="whatsappDescricao">Digite o número com DDD para continuar.</p>
         <div class="field">
-          <label for="whatsappNumero">Número do WhatsApp</label>
-          <input type="tel" id="whatsappNumero" inputmode="numeric" autocomplete="off" placeholder="Digite o número com DDD" />
+          <label for="whatsappNome">Nome e sobrenome <span>*</span></label>
+          <input type="text" id="whatsappNome" autocomplete="off" placeholder="Digite o nome e sobrenome" />
+        </div>
+        <div class="field">
+          <label for="whatsappNumero">Número do WhatsApp com DDD <span>*</span></label>
+          <input type="tel" id="whatsappNumero" inputmode="numeric" autocomplete="off" placeholder="Digite o telefone com DDD" />
         </div>
         <button type="button" id="confirmarWhatsappBtn">Continuar no WhatsApp</button>
       </div>
@@ -743,7 +791,7 @@
     </main>
 
   <footer class="footer">
-      <div>© <span id="anoAtual"></span> Desenvolvido por Artur Neto WhatsApp: <a href="https://wa.me/558688073377" target="_blank" rel="noopener noreferrer">(86) 8807-3377</a></div>
+      <div>© <span id="anoAtual"></span> Desenvolvido por Artur Neto WhatsApp: <a href="https://wa.me/558688073377" target="_blank" rel="noopener noreferrer">(86) 9.8807-3377</a></div>
     </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
@@ -806,9 +854,11 @@
     const pixQrCode = document.getElementById('pixQrCode');
     const enviarCodigoPixBtn = document.getElementById('enviarCodigoPixBtn');
     const solicitarComprovanteBtn = document.getElementById('solicitarComprovanteBtn');
+    const solicitarComprovanteClienteBtn = document.getElementById('solicitarComprovanteClienteBtn');
     const whatsappBox = document.getElementById('whatsappBox');
     const whatsappTitulo = document.getElementById('whatsappTitulo');
     const whatsappDescricao = document.getElementById('whatsappDescricao');
+    const whatsappNome = document.getElementById('whatsappNome');
     const whatsappNumero = document.getElementById('whatsappNumero');
     const confirmarWhatsappBtn = document.getElementById('confirmarWhatsappBtn');
     
@@ -828,6 +878,7 @@
     let codigoPixAtual = '';
     let acaoWhatsappAtual = 'codigo';
     let ultimoWhatsappInformado = localStorage.getItem('ultimoWhatsappInformado') || '';
+    let ultimoWhatsappNome = localStorage.getItem('ultimoWhatsappNome') || '';
 
     function formatarMoeda(valor) {
       return valor.toLocaleString('pt-BR', {
@@ -912,6 +963,7 @@
     function esconderPix() {
       pixBox.style.display = 'none';
       whatsappBox.style.display = 'none';
+      whatsappNome.value = ultimoWhatsappNome;
       whatsappNumero.value = ultimoWhatsappInformado;
       codigoPixAtual = '';
       const contexto = pixQrCode.getContext('2d');
@@ -923,6 +975,7 @@
       codigoPixAtual = codigoPix;
       pixBox.style.display = 'grid';
       whatsappBox.style.display = 'none';
+      whatsappNome.value = ultimoWhatsappNome;
       whatsappNumero.value = ultimoWhatsappInformado;
 
       if (window.QRCode && typeof window.QRCode.toCanvas === 'function') {
@@ -968,6 +1021,11 @@
         return;
       }
 
+      if (whatsappNome.value.trim()) {
+        ultimoWhatsappNome = whatsappNome.value;
+        localStorage.setItem('ultimoWhatsappNome', ultimoWhatsappNome);
+      }
+
       if (whatsappNumero.value.trim()) {
         ultimoWhatsappInformado = whatsappNumero.value;
         localStorage.setItem('ultimoWhatsappInformado', ultimoWhatsappInformado);
@@ -975,25 +1033,39 @@
 
       acaoWhatsappAtual = tipo;
       whatsappBox.style.display = 'grid';
+      whatsappNome.value = ultimoWhatsappNome;
       whatsappNumero.value = ultimoWhatsappInformado;
 
       if (tipo === 'codigo') {
-        whatsappTitulo.textContent = 'Enviar código Pix por WhatsApp';
-        whatsappDescricao.textContent = 'Digite o número com DDD para enviar somente o código Pix.';
+        whatsappTitulo.textContent = 'Enviar código Pix';
+        whatsappDescricao.textContent = 'Digite o nome completo e o telefone com DDD para enviar o código Pix.';
         confirmarWhatsappBtn.textContent = 'Enviar código Pix';
+      } else if (tipo === 'comprovante') {
+        whatsappTitulo.textContent = 'Solicitar Comprovante';
+        whatsappDescricao.textContent = 'Preencha nome e sobrenome do cliente e o telefone com DDD para solicitar o comprovante do Pix.';
+        confirmarWhatsappBtn.textContent = 'Solicitar Comprovante';
       } else {
-        whatsappTitulo.textContent = 'Solicitar comprovante Pix';
-        whatsappDescricao.textContent = 'Digite o número com DDD para solicitar o comprovante do pagamento.';
-        confirmarWhatsappBtn.textContent = 'Solicitar comprovante';
+        whatsappTitulo.textContent = 'Enviar informações';
+        whatsappDescricao.textContent = 'Preencha nome e sobrenome do cliente e o telefone com DDD para enviar as informações da cobrança e o passo a passo de pagamento via Pix Copia e Cola.';
+        confirmarWhatsappBtn.textContent = 'Enviar informações';
       }
 
-      whatsappNumero.focus();
+      whatsappNome.focus();
     }
 
     function enviarWhatsapp() {
       const numeroFormatado = normalizarNumeroWhatsapp(whatsappNumero.value);
+      const nomeCompleto = whatsappNome.value.trim();
+      ultimoWhatsappNome = nomeCompleto;
+      localStorage.setItem('ultimoWhatsappNome', ultimoWhatsappNome);
       ultimoWhatsappInformado = whatsappNumero.value;
       localStorage.setItem('ultimoWhatsappInformado', ultimoWhatsappInformado);
+
+      if (!nomeCompleto || nomeCompleto.split(/\s+/).length < 2) {
+        alert('Digite nome e sobrenome.');
+        whatsappNome.focus();
+        return;
+      }
 
       if (!numeroFormatado) {
         alert('Digite um número de WhatsApp válido com DDD.');
@@ -1003,7 +1075,8 @@
 
       const mensagem = acaoWhatsappAtual === 'codigo'
         ? codigoPixAtual
-        : `Olá! Por favor, envie o comprovante do Pix desta compra realizada no dia ${new Date().toLocaleDateString('pt-BR')}, no período da ${(() => {
+        : acaoWhatsappAtual === 'comprovante'
+        ? `${nomeCompleto}, por favor envie o comprovante do Pix referente à sua compra realizada em ${new Date().toLocaleDateString('pt-BR')}, no período da ${(() => {
             const hora = new Date().getHours();
             if (hora >= 0 && hora < 6) return 'madrugada';
             if (hora >= 6 && hora < 12) return 'manhã';
@@ -1013,7 +1086,30 @@
 
 Estabelecimento: Os Petecas
 Recebedor: Josifran de Sousa Lima
-Valor: ${document.getElementById('resCobrar').textContent}`;
+Valor: ${document.getElementById('resCobrar').textContent}
+
+Agradecemos a compreensão.`
+        : `Olá! Seguem as informações para o pagamento via Pix desta compra realizada no dia ${new Date().toLocaleDateString('pt-BR')}, no período da ${(() => {
+            const hora = new Date().getHours();
+            if (hora >= 0 && hora < 6) return 'madrugada';
+            if (hora >= 6 && hora < 12) return 'manhã';
+            if (hora >= 12 && hora < 18) return 'tarde';
+            return 'noite';
+          })()}.
+
+Cliente: ${nomeCompleto}
+Estabelecimento: Os Petecas
+Recebedor: Josifran de Sousa Lima
+Valor: ${document.getElementById('resCobrar').textContent}
+
+Como pagar com Pix Copia e Cola:
+1. Abra o aplicativo do seu banco.
+2. Acesse a área Pix.
+3. Toque em Pix Copia e Cola.
+4. Peça ou aguarde o código Pix Copia e Cola.
+5. Cole o código no app do banco.
+6. Confira o valor e o recebedor.
+7. Finalize o pagamento.`;
 
       window.open(`https://wa.me/${numeroFormatado}?text=${encodeURIComponent(mensagem)}`, '_blank');
     }
@@ -1208,9 +1304,34 @@ Valor: ${document.getElementById('resCobrar').textContent}`;
       }
     });
     calcularBtn.addEventListener('click', calcular);
-    enviarCodigoPixBtn.addEventListener('click', () => abrirAcaoWhatsapp('codigo'));
-    solicitarComprovanteBtn.addEventListener('click', () => abrirAcaoWhatsapp('comprovante'));
+    enviarCodigoPixBtn.addEventListener('click', () => {
+      if (ultimoWhatsappInformado && normalizarNumeroWhatsapp(ultimoWhatsappInformado)) {
+        acaoWhatsappAtual = 'codigo';
+        whatsappNome.value = ultimoWhatsappNome;
+        whatsappNumero.value = ultimoWhatsappInformado;
+        enviarWhatsapp();
+        return;
+      }
+
+      abrirAcaoWhatsapp('codigo');
+    });
+    solicitarComprovanteClienteBtn.addEventListener('click', () => {
+      if (ultimoWhatsappInformado && normalizarNumeroWhatsapp(ultimoWhatsappInformado)) {
+        acaoWhatsappAtual = 'comprovante';
+        whatsappNome.value = ultimoWhatsappNome;
+        whatsappNumero.value = ultimoWhatsappInformado;
+        enviarWhatsapp();
+        return;
+      }
+
+      abrirAcaoWhatsapp('comprovante');
+    });
+    solicitarComprovanteBtn.addEventListener('click', () => abrirAcaoWhatsapp('info'));
     confirmarWhatsappBtn.addEventListener('click', enviarWhatsapp);
+    whatsappNome.addEventListener('input', () => {
+      ultimoWhatsappNome = whatsappNome.value;
+      localStorage.setItem('ultimoWhatsappNome', ultimoWhatsappNome);
+    });
     whatsappNumero.addEventListener('input', () => {
       ultimoWhatsappInformado = whatsappNumero.value;
       localStorage.setItem('ultimoWhatsappInformado', ultimoWhatsappInformado);
@@ -1224,10 +1345,13 @@ Valor: ${document.getElementById('resCobrar').textContent}`;
 
     anoAtual.textContent = new Date().getFullYear();
     localStorage.removeItem('ultimoWhatsappInformado');
+    localStorage.removeItem('ultimoWhatsappNome');
     ultimoWhatsappInformado = '';
+    ultimoWhatsappNome = '';
     valorInput.value = '';
     tipoSelect.value = '';
     valorProdutoInput.value = '';
+    whatsappNome.value = '';
     whatsappNumero.value = '';
     resultado.style.display = 'none';
     mensagemCalculo.style.display = 'block';
